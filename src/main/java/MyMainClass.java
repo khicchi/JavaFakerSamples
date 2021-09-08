@@ -1,7 +1,6 @@
 import com.github.javafaker.Faker;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Locale;
 
 public class MyMainClass
@@ -13,25 +12,16 @@ public class MyMainClass
         javaFaker = Faker.instance();
         javaFakerTR = Faker.instance(new Locale("tr-TR"));
 
-        //printJavaFaker();
-
-        //System.out.println(": \t" +  javaFaker.currency() );//
-
-        //todo bunu sonda diğerleri ile ele al
-        //System.out.println(javaFaker.bothify("????##@gmail.com"));
+        printJavaFaker();
     }
 
     static void printJavaFaker()
     {
         try {
             Method[] mainMethods = Faker.class.getMethods();
-            int counter=0, errorcounter = 0;
-            StringBuilder builder = new StringBuilder();
 
             for (Method mainMethod:mainMethods)
             {
-                String mainMethodName = mainMethod.getName();
-
                 Class<?> mainMethodReturnType = mainMethod.getReturnType();
 
                 Method[] childMethods = mainMethodReturnType.getMethods();
@@ -39,8 +29,8 @@ public class MyMainClass
                 for (Method childMethod:childMethods)
                 {
                     try{
-                        //Class classNumber = Class.forName("com.github.javafaker.Number");
-                        Class classOfReturnType = Class.forName(mainMethodReturnType.getName());
+
+                        Class<?> classOfReturnType = Class.forName(mainMethodReturnType.getName());
                         Method method0 = classOfReturnType.getDeclaredMethod(childMethod.getName());
 
                         Object[] instances = getObjectByClaz(mainMethodReturnType.getName());
@@ -53,29 +43,12 @@ public class MyMainClass
 
                             //System.out.println(method0.invoke(Faker.instance().number()));
                         }
-                        else
-                        {
-                            builder.append(mainMethodReturnType.getSimpleName())
-                                    .append("///method name: ").append(childMethod.getName())
-                                    .append("///parameter types: ")
-                                    .append(Arrays.toString(childMethod.getParameterTypes())).append("\n");
-                        }
-                        /*else if (childMethod.getParameterCount() == 1 && childMethod.getParameterTypes()[0].isAssignableFrom(boolean.class)){
-                            counter++;
-
-                            System.out.println("Class: " + mainMethodReturnType.getSimpleName() + "/method: " +
-                                    childMethod.getName() + " \tvalueEN:\t" + method0.invoke(instances[0], true) +
-                                    "\tvalueTR: " + method0.invoke(instances[1], new boolean[]{true, true}));
-                            //System.out.println("Class: " + mainMethodReturnType.getSimpleName() + "/method: " + childMethod.getName() + " \tvalue:\t" + method0.invoke(getObjectByClaz(mainMethodReturnType.getName()), false));
-                        }*/
                     }
                     catch (Exception e){
                         //e.printStackTrace();
                     }
-
                 }
             }
-            System.out.println(builder.toString());
         }
         catch (Exception e){
             e.printStackTrace();
